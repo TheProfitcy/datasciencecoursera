@@ -1,0 +1,56 @@
+---
+title: "American’s And Financial Satisfaction"
+author: "Jason Eyerly"
+date: "September 20, 2014"
+output: html_document
+---
+
+  This document is a project proposal for my Coursera class: Data Analysis & Statistical Inference. As a person who is actively involved in the Financial Markets, I hypothesized that there may be a correlation between the satisfaction of Americans and the percentage return of the S&P500 the year prior. 
+
+  My reasoning for this is that the $SPX can often be used as an economic indicator, and may in turn reflect how Americans are doing financially.
+
+```{r, echo=FALSE}
+require(Quandl)
+require(lubridate)
+require(zoo)
+require(xts)
+
+myGSS <- load(url("http://bit.ly/dasi_gss_data"))
+
+year <- gss$year
+finSat <- gss$satfin
+
+relativeTable <- data.frame(year, finSat)
+relativeTable <- subset(relativeTable, year > "1988" & !is.na(finSat))
+
+
+spReturns <- Quandl("SANDP/ANNRETS", trim_start="1970-01-11", 
+                    trim_end="2012-12-31", authcode="nwy3a_Gmd7TSS9fVirxT", 
+                    collapse="annual")
+
+percentChange <- spReturns$"Total Return Change"
+
+spReturns$"Year Ending" <- format((spReturns$"Year Ending"), "%Y")
+spReturns$"Year Ending" <- as.numeric(spReturns$"Year Ending")
+spReturns$"Year Ending" <- spReturns[,1] + 1 #the following year
+
+combined <- merge(relativeTable, spReturns, by.x = "year", by.y = "Year Ending")
+names(combined)[6] <- "percentChange"
+
+finalResults <- data.frame(combined$year, combined$finSat, combined$percentChange)
+names(finalResults)[1] <- "Year"
+names(finalResults)[2] <- "FinancialSatisfaction"
+names(finalResults)[3] <- "PercentChange"
+
+finalResults$PercentChange <- finalResults$PercentChange * 100
+```
+
+Boxplot Summarizing Results:
+
+```{r, echo=FALSE}
+boxplot(finalResults$PercentChange ~ finalResults$FinancialSatisfaction, xlab = "Financial Satisfaction", ylab = "Percent Change")
+summary(finalResults$PercentChange)
+table(finalResults$FinancialSatisfaction)
+```
+
+As you can see, the data is left skewed, and is unimodal. This left skew implies that the mean was dragged down by a greater number of years with a low or even negative return.
