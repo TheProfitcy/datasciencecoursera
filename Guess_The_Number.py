@@ -48,7 +48,7 @@ def input_guess(guess):
         print ""
         
         if number_of_guesses == 0:
-            print "Game Over! You Ran Out Of Guesses!"
+            print "Game Over! You Ran Out Of Guesses! The Correct Number Was: ", secret_number
             new_game()
             
     elif guess < secret_number:
@@ -59,7 +59,7 @@ def input_guess(guess):
         print ""
         
         if number_of_guesses == 0:
-            print "Game Over! You Ran Out Of Guesses!"
+            print "Game Over! You Ran Out Of Guesses! The Correct Number Was: ", secret_number
             new_game()
         
     elif guess == secret_number:
