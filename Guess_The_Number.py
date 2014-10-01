@@ -22,7 +22,7 @@ def range100():
     global number_of_guesses
     secret_number = random.randrange(0, 101)
     number_of_guesses = 7
-    print "New Game! Current range is set to 0 - 1000!"
+    print "New Game! Current range is set to 0 - 100!"
 
 def range1000():
     # button that changes the range to [0,1000) and starts a new game     
