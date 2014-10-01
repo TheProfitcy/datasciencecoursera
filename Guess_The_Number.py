@@ -62,7 +62,7 @@ def input_guess(guess):
             print "Game Over! You Ran Out Of Guesses!"
             new_game()
         
-    elif number_of_guesses == secret_number:
+    elif guess == secret_number:
         print "Correct!"
         new_game()
         
